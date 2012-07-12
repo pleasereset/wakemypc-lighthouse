@@ -29,8 +29,20 @@ namespace ree7.WakeMyPC.ProbeServer
             }
         }
 
+        public bool isRunning
+        {
+            get { return this.isWorkerAlive(); }
+        }
+
         public void Start()
         {
+            // Check if a worker isn't already running
+            if (isWorkerAlive())
+            {
+                Log.d("Could not start server, an instance is already running.");
+                return;
+            }
+
             _continue = true;
             worker = new Thread(() =>
             {
@@ -84,7 +96,12 @@ namespace ree7.WakeMyPC.ProbeServer
         public void Stop()
         {
             _continue = false;
-            if (worker.ThreadState == ThreadState.Running) worker.Abort();
+            if (isWorkerAlive()) worker.Abort();
+        }
+
+        private bool isWorkerAlive()
+        {
+            return worker != null && worker.ThreadState == ThreadState.Running;
         }
 
         private void OnData(string data, NetworkStream ns)

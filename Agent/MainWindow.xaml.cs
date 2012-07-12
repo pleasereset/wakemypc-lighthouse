@@ -25,8 +25,9 @@ namespace Agent
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = MainViewModel.Instance;
 
-            server = new Server(39002, "test");
+            server = new Server(30022, "test");
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
