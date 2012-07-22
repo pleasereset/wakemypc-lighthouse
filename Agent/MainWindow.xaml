@@ -22,8 +22,8 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <StackPanel x:Name="DebugPanel" Orientation="Vertical" Grid.Row="1">
-                <Button Click="StartButton_Click" Margin="0,4" Height="30">Start</Button>
-                <Button Click="StopButton_Click" Margin="0,4" Height="30">Stop</Button>
+                <Button Click="StartButton_Click" Margin="0,4" Height="30" IsEnabled="{Binding IsServerRunning, Converter={StaticResource BoolInverterConverter}}">Start</Button>
+                <Button Click="StopButton_Click" Margin="0,4" Height="30" IsEnabled="{Binding IsServerRunning}">Stop</Button>
                 <TextBlock Text="Dude, I'm in alpha stage, don't too harsh with me ! Oh and I only work on WAN so far, so your computer and phone needs to be on the same network. You can give feedback about me at www.ree7.fr" TextWrapping="Wrap" Foreground="#FFA39B9B" />
             </StackPanel>
 

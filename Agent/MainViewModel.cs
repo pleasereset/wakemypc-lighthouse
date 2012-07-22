@@ -22,7 +22,15 @@ namespace Agent
 
         private MainViewModel()
         {
+            _Password = Settings.Default.Password;
+            _Port = Settings.Default.Port;
+        }
 
+        ~MainViewModel()
+        {
+            Settings.Default.Password = _Password;
+            Settings.Default.Port = _Port;
+            Settings.Default.Save();
         }
 
         private static MainViewModel _Instance = null;
@@ -103,7 +111,7 @@ namespace Agent
             {
                 _Server = new Server(int.Parse(Port), Password);
                 _Server.Start();
-                _ServerRunning = true;
+                IsServerRunning = true;
             }
         }
 
@@ -115,7 +123,7 @@ namespace Agent
             if (_Server != null && _ServerRunning)
             {
                 _Server.Stop();
-                _ServerRunning = false;
+                IsServerRunning = false;
             }
         }
     }
