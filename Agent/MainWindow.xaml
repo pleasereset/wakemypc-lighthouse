@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Agent.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Wake my PC Lighthouse" Height="271" Width="525" Icon="/Agent;component/ico.ico" ResizeMode="CanMinimize" VisualTextRenderingMode="ClearType">
+        Title="Wake my PC Lighthouse" Height="306" Width="525" Icon="/Agent;component/ico.ico" ResizeMode="CanMinimize" VisualTextRenderingMode="ClearType">
     <Window.Resources>
 
     </Window.Resources>
@@ -38,6 +38,10 @@
 
                     <TextBlock Text="Port"/>
                     <TextBox x:Name="tbPort" Text="{Binding Port, Mode=TwoWay}"/>
+
+                    <CheckBox x:Name="cbAutoStart" IsChecked="{Binding Autostart, Mode=TwoWay}" Margin="0,8">
+                        <TextBlock Text="Autostart server on launch (will start minimized)"/>
+                    </CheckBox>
                 </StackPanel>
             </Grid>
         </Grid>

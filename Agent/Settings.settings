@@ -8,5 +8,8 @@
     <Setting Name="Password" Type="System.String" Scope="User">
       <Value Profile="(Default)">helloworld</Value>
     </Setting>
+    <Setting Name="Autostart" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -46,5 +46,17 @@ namespace Agent {
                 this["Password"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Autostart {
+            get {
+                return ((bool)(this["Autostart"]));
+            }
+            set {
+                this["Autostart"] = value;
+            }
+        }
     }
 }

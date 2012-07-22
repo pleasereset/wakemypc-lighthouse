@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel;
 using ree7.WakeMyPC.ProbeServer;
-using System.Windows.Input;
 
 namespace Agent
 {
@@ -24,12 +20,16 @@ namespace Agent
         {
             _Password = Settings.Default.Password;
             _Port = Settings.Default.Port;
+            _Autostart = Settings.Default.Autostart;
+
+            if (_Autostart) StartServer();
         }
 
         ~MainViewModel()
         {
             Settings.Default.Password = _Password;
             Settings.Default.Port = _Port;
+            Settings.Default.Autostart = _Autostart;
             Settings.Default.Save();
         }
 
@@ -48,6 +48,7 @@ namespace Agent
         #region Bindings
         const string PasswordPropertyName = "Password";
         const string PortPropertyName = "Port";
+        const string AutostartPropertyName = "Autostart";
         const string IsServerRunningPropertyName = "IsServerRunning";
 
         private string _Password = "";
@@ -83,6 +84,20 @@ namespace Agent
                     {
                         throw new ArgumentException();
                     }
+                }
+            }
+        }
+
+        private bool _Autostart = false;
+        public bool Autostart
+        {
+            get { return _Autostart; }
+            set
+            {
+                if (value != _Autostart)
+                {
+                    _Autostart = value;
+                    NotifyPropertyChanged(AutostartPropertyName);
                 }
             }
         }
