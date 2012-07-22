@@ -40,6 +40,7 @@ namespace Agent
         #region Bindings
         const string PasswordPropertyName = "Password";
         const string PortPropertyName = "Port";
+        const string IsServerRunningPropertyName = "IsServerRunning";
 
         private string _Password = "";
         public string Password
@@ -77,9 +78,45 @@ namespace Agent
                 }
             }
         }
+
+        private bool _ServerRunning = false;
+        public bool IsServerRunning
+        {
+            get { return _ServerRunning; }
+            private set
+            {
+                _ServerRunning = value;
+                NotifyPropertyChanged(IsServerRunningPropertyName);
+            }
+        }
         #endregion
 
         private Server _Server = null;
+        
 
+        /// <summary>
+        /// Please, tranform me into ICommand when you'll be less lasy
+        /// </summary>
+        public void StartServer()
+        {
+            if (!_ServerRunning)
+            {
+                _Server = new Server(int.Parse(Port), Password);
+                _Server.Start();
+                _ServerRunning = true;
+            }
+        }
+
+        /// <summary>
+        /// Please, tranform me into ICommand when you'll be less lasy
+        /// </summary>
+        public void StopServer()
+        {
+            if (_Server != null && _ServerRunning)
+            {
+                _Server.Stop();
+                _ServerRunning = false;
+            }
+        }
     }
 }

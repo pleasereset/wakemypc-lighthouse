@@ -12,6 +12,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ree7.WakeMyPC.ProbeServer;
+using System.Windows.Forms;
+using System.Drawing;
 
 namespace Agent
 {
@@ -20,24 +22,22 @@ namespace Agent
     /// </summary>
     public partial class MainWindow : Window
     {
-        Server server;
-
         public MainWindow()
         {
             InitializeComponent();
             DataContext = MainViewModel.Instance;
 
-            server = new Server(30022, "test");
+            MinimizeToTray.Enable(this);
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            server.Start();
+            MainViewModel.Instance.StartServer();
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            server.Stop();
+            MainViewModel.Instance.StopServer();
         }
 
 
