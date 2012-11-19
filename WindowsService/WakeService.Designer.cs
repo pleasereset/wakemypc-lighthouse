@@ -1,6 +1,6 @@
-﻿namespace ree7.WakeMyPC.Service
+﻿namespace ree7.WakeMyPC.WindowsService
 {
-    partial class Service1
+    partial class WakeService
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,18 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.eventLog1 = new System.Diagnostics.EventLog();
-            ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
             // 
-            // Service1
+            // WakeService
             // 
-            this.ServiceName = "WakeMyPCSrv";
-            ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
+            this.ServiceName = "Wake my PC Lighthouse";
 
         }
 
         #endregion
-
-        private System.Diagnostics.EventLog eventLog1;
     }
 }

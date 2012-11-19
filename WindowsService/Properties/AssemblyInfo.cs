@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Service")]
+[assembly: AssemblyTitle("Wake my PC Lighthouse Service")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Service")]
-[assembly: AssemblyCopyright("Copyright ©  2012")]
+[assembly: AssemblyCompany("ree7")]
+[assembly: AssemblyProduct("Wake my PC")]
+[assembly: AssemblyCopyright("Pierre Belin, ree7 - 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("28339db0-a1d5-497d-aeef-49ca3d50f5d5")]
+[assembly: Guid("a5f746cc-cb0e-4235-820e-35a84b40e02a")]
 
 // Version information for an assembly consists of the following four values:
 //

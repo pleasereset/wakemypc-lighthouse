@@ -27,6 +27,8 @@ namespace ree7.WakeMyPC.ProbeServer
                 Log.d("Exception at Server() : " + ex);
                 throw new InvalidOperationException();
             }
+
+            Log.d("Lighthouse listening on " + port + " with password " + password);
         }
 
         public bool isRunning
@@ -104,6 +106,9 @@ namespace ree7.WakeMyPC.ProbeServer
             return worker != null && worker.ThreadState == ThreadState.Running;
         }
 
+        private const string CommandPassword = "PASSWORD/";
+        private const string CommandShutdown = "SHUTDOWN/";
+
         private void OnData(string data, NetworkStream ns)
         {
             string answer = "KO";
@@ -111,16 +116,16 @@ namespace ree7.WakeMyPC.ProbeServer
 
             data = data.TrimEnd('\0');
 
-            if(data.StartsWith("PASSWORD/"))
+            if(data.StartsWith(CommandPassword))
             {
-                if(data == "PASSWORD/" + password)
+                if(CheckPassword(data.Substring(CommandPassword.Length)))
                 {
                     answer = "OK PASSWORD";
                 }
             }
-            else if (data.StartsWith("SHUTDOWN/"))
+            else if (data.StartsWith(CommandShutdown))
             {
-                if (data == "SHUTDOWN/" + password)
+                if (CheckPassword(data.Substring(CommandShutdown.Length)))
                 {
                     answer = "OK SHUTDOWN";
                     // System call to shutdown
@@ -134,10 +139,16 @@ namespace ree7.WakeMyPC.ProbeServer
             // Send answer
             Byte[] sendBytes = Encoding.UTF8.GetBytes(answer);
             ns.Write(sendBytes, 0, sendBytes.Length);
-            Log.d("Answer sent.");
 
             // Do action
             if(action != null) action();
+        }
+
+        private bool CheckPassword(string password)
+        {
+            Log.d("Checking password : " + password);
+            if (password[password.Length - 1] == '\n') password = password.Substring(0, password.Length - 1);
+            return this.password == password;
         }
     }
 }

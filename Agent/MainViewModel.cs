@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using ree7.WakeMyPC.ProbeServer;
+using System.ServiceProcess;
+using ree7.WakeMyPC.WindowsService;
 
 namespace Agent
 {
@@ -18,19 +20,7 @@ namespace Agent
 
         private MainViewModel()
         {
-            _Password = Settings.Default.Password;
-            _Port = Settings.Default.Port;
-            _Autostart = Settings.Default.Autostart;
-
-            if (_Autostart) StartServer();
-        }
-
-        ~MainViewModel()
-        {
-            Settings.Default.Password = _Password;
-            Settings.Default.Port = _Port;
-            Settings.Default.Autostart = _Autostart;
-            Settings.Default.Save();
+            Initialize();
         }
 
         private static MainViewModel _Instance = null;
@@ -112,22 +102,14 @@ namespace Agent
                 NotifyPropertyChanged(IsServerRunningPropertyName);
             }
         }
-        #endregion
-
-        private Server _Server = null;
-        
 
         /// <summary>
         /// Please, tranform me into ICommand when you'll be less lasy
         /// </summary>
         public void StartServer()
         {
-            if (!_ServerRunning)
-            {
-                _Server = new Server(int.Parse(Port), Password);
-                _Server.Start();
-                IsServerRunning = true;
-            }
+            if (_service != null) _service.Start();
+            IsServerRunning = true; // TODO replace by probing real service status
         }
 
         /// <summary>
@@ -135,11 +117,56 @@ namespace Agent
         /// </summary>
         public void StopServer()
         {
-            if (_Server != null && _ServerRunning)
+            if (_service != null) _service.Stop();
+            IsServerRunning = false; // TODO replace by probing real service status
+        }
+
+        /// <summary>
+        /// Please, tranform me into ICommand when you'll be less lasy
+        /// </summary>
+        public void SaveSettings()
+        {
+            SaveSettingsToRegistry();
+        }
+          
+        #endregion
+
+        private ServiceController _service;
+        private RegistryConfiguration _registrySettings;
+
+        private void Initialize()
+        {
+            _service = LocateService();
+            IsServerRunning = _service.Status == ServiceControllerStatus.Running;
+
+            LoadSettingsFromRegistry();
+        }
+
+        private ServiceController LocateService()
+        {
+            ServiceController[] allServices = ServiceController.GetServices();
+            foreach (ServiceController svc in allServices)
             {
-                _Server.Stop();
-                IsServerRunning = false;
+                if (svc.ServiceName == WakeService.SvcName)
+                    return svc;
             }
+
+            throw new WarningException("Wake my PC Lighthouse service is not installed.");
+        }
+
+        
+        private void LoadSettingsFromRegistry()
+        {
+            _registrySettings = new RegistryConfiguration();
+            Port = _registrySettings.Port.ToString();
+            Password = _registrySettings.Password;
+        }
+
+        private void SaveSettingsToRegistry()
+        {
+            int port = Int32.Parse(Port);
+            string password = Password;
+            _registrySettings.Save(port, password);
         }
     }
 }
