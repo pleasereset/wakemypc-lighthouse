@@ -3,6 +3,8 @@ using System.ComponentModel;
 using ree7.WakeMyPC.ProbeServer;
 using System.ServiceProcess;
 using ree7.WakeMyPC.WindowsService;
+using System.Windows.Input;
+using GalaSoft.MvvmLight.Command;
 
 namespace Agent
 {
@@ -38,8 +40,9 @@ namespace Agent
         #region Bindings
         const string PasswordPropertyName = "Password";
         const string PortPropertyName = "Port";
-        const string AutostartPropertyName = "Autostart";
+        const string IsBusyPropertyName = "IsBusy";
         const string IsServerRunningPropertyName = "IsServerRunning";
+        const string CanSaveSettingsPropertyName = "CanSaveSettings";
 
         private string _Password = "";
         public string Password
@@ -51,6 +54,7 @@ namespace Agent
                 {
                     _Password = value;
                     NotifyPropertyChanged(PasswordPropertyName);
+                    CanSaveSettings = true;
                 }
             }
         }
@@ -69,25 +73,12 @@ namespace Agent
                     {
                         _Port = value;
                         NotifyPropertyChanged(PortPropertyName);
+                        CanSaveSettings = true;
                     }
                     else
                     {
                         throw new ArgumentException();
                     }
-                }
-            }
-        }
-
-        private bool _Autostart = false;
-        public bool Autostart
-        {
-            get { return _Autostart; }
-            set
-            {
-                if (value != _Autostart)
-                {
-                    _Autostart = value;
-                    NotifyPropertyChanged(AutostartPropertyName);
                 }
             }
         }
@@ -103,13 +94,38 @@ namespace Agent
             }
         }
 
+        private bool _CanSaveSettings = false;
+        public bool CanSaveSettings
+        {
+            get { return _CanSaveSettings; }
+            private set
+            {
+                Console.WriteLine("CanSaveSettings=" + value);
+                _CanSaveSettings = value;
+                NotifyPropertyChanged(CanSaveSettingsPropertyName);
+            }
+        }
+
+        private bool _IsBusy = false;
+        public bool IsBusy
+        {
+            get { return _IsBusy; }
+            private set
+            {
+                _IsBusy = value;
+                NotifyPropertyChanged(IsBusyPropertyName);
+            }
+        }
+
         /// <summary>
         /// Please, tranform me into ICommand when you'll be less lasy
         /// </summary>
         public void StartServer()
         {
+            IsBusy = true;
             if (_service != null) _service.Start();
             IsServerRunning = true; // TODO replace by probing real service status
+            IsBusy = false;
         }
 
         /// <summary>
@@ -117,8 +133,10 @@ namespace Agent
         /// </summary>
         public void StopServer()
         {
+            IsBusy = true;
             if (_service != null) _service.Stop();
             IsServerRunning = false; // TODO replace by probing real service status
+            IsBusy = false;
         }
 
         /// <summary>
@@ -127,8 +145,13 @@ namespace Agent
         public void SaveSettings()
         {
             SaveSettingsToRegistry();
+            CanSaveSettings = false;
+
+            // Restart the server
+            StopServer();
+            StartServer();
         }
-          
+
         #endregion
 
         private ServiceController _service;
@@ -140,6 +163,7 @@ namespace Agent
             IsServerRunning = _service.Status == ServiceControllerStatus.Running;
 
             LoadSettingsFromRegistry();
+            CanSaveSettings = false;
         }
 
         private ServiceController LocateService()

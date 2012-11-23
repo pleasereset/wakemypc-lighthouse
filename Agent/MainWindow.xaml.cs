@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Data;
+using System.Windows.Input;
 
 namespace Agent
 {
@@ -41,6 +43,27 @@ namespace Agent
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             MainViewModel.Instance.SaveSettings();
+        }       
+    }
+
+    public class BusyStateBoolCursorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value is bool)
+            {
+                bool b = (bool)value;
+                return b ? Cursors.Wait : Cursors.Arrow;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }
