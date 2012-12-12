@@ -100,7 +100,6 @@ namespace Agent
             get { return _CanSaveSettings; }
             private set
             {
-                Console.WriteLine("CanSaveSettings=" + value);
                 _CanSaveSettings = value;
                 NotifyPropertyChanged(CanSaveSettingsPropertyName);
             }
@@ -123,8 +122,20 @@ namespace Agent
         public void StartServer()
         {
             IsBusy = true;
-            if (_service != null) _service.Start();
-            IsServerRunning = true; // TODO replace by probing real service status
+            if (_service != null)
+            {
+                try
+                {
+                    _service.Start();
+                    _service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(30));
+                    IsServerRunning = _service.Status == ServiceControllerStatus.Running;
+                    Console.WriteLine("After StartServer : " + _service.Status);
+                }
+                catch(Exception ex) 
+                {
+                    Console.WriteLine("Exception in StartServer : " + ex.ToString());
+                }
+            }
             IsBusy = false;
         }
 
@@ -134,8 +145,20 @@ namespace Agent
         public void StopServer()
         {
             IsBusy = true;
-            if (_service != null) _service.Stop();
-            IsServerRunning = false; // TODO replace by probing real service status
+            if (_service != null)
+            {
+                try
+                {
+                    _service.Stop();
+                    _service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
+                    IsServerRunning = _service.Status != ServiceControllerStatus.Stopped;
+                    Console.WriteLine("After StopServer : " + _service.Status);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception in StopServer : " + ex.ToString());
+                }
+            }
             IsBusy = false;
         }
 
@@ -144,12 +167,20 @@ namespace Agent
         /// </summary>
         public void SaveSettings()
         {
+            if(IsServerRunning == true) StopServer();
+
             SaveSettingsToRegistry();
             CanSaveSettings = false;
 
-            // Restart the server
-            StopServer();
-            StartServer();
+            if(IsServerRunning == false) StartServer();
+        }
+
+        /// <summary>
+        /// Please, tranform me into ICommand when you'll be less lasy
+        /// </summary>
+        public void SettingsModified()
+        {
+            CanSaveSettings = true;
         }
 
         #endregion

@@ -70,7 +70,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <StackPanel x:Name="DebugPanel" Orientation="Vertical" Grid.Row="1">
-                <TextBlock Text="Don't forget to open the port (TCP) in your firewall's settings and on your router (if applicable)." TextWrapping="Wrap" Foreground="#FFA39B9B" />
+                <TextBlock Text="Don't forget to open the port (TCP) in your firewall's settings and on your router (if applicable)." TextWrapping="Wrap" Foreground="#FFA39B9B" FontWeight="Bold" />
                 <TextBlock Text="I'm a beta tool (source available on Github). You can give feedback about me at www.ree7.fr" TextWrapping="Wrap" Foreground="#FFA39B9B" />
                 <Grid Margin="0,8,0,0">
                     <Grid.ColumnDefinitions>
@@ -86,9 +86,9 @@
             <Grid Grid.Row="0">
                 <StackPanel>
                     <TextBlock Text="Port" Margin="0,0,0,8"/>
-                    <TextBox x:Name="tbPort" Text="{Binding Port, Mode=TwoWay}" Margin="0,0,0,8"/>
+                    <TextBox x:Name="tbPort" Text="{Binding Port, Mode=TwoWay}" Margin="0,0,0,8" KeyUp="SettingsBoxes_KeyUp"/>
                     <TextBlock Text="Access password" Margin="0,0,0,8"/>
-                    <TextBox x:Name="tbPassword" Text="{Binding Password, Mode=TwoWay}" Margin="0,0,0,8"/>
+                    <TextBox x:Name="tbPassword" Text="{Binding Password, Mode=TwoWay}" Margin="0,0,0,8" KeyUp="SettingsBoxes_KeyUp"/>
                     <Button Click="SaveButton_Click" Content="Save" IsEnabled="{Binding CanSaveSettings}" Style="{DynamicResource SystemButtonStyle}" Width="100" Height="30" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,8"/>
                 </StackPanel>
             </Grid>

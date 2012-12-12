@@ -43,6 +43,11 @@ namespace Agent
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             MainViewModel.Instance.SaveSettings();
+        }
+
+        private void SettingsBoxes_KeyUp(object sender, KeyEventArgs e)
+        {
+            MainViewModel.Instance.SettingsModified();
         }       
     }
 
