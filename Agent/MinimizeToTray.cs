@@ -8,7 +8,7 @@ using System;
 using System.Reflection;
 using System.Drawing;
 
-namespace Agent
+namespace ree7.WakeMyPC.Agent
 {
     public static class MinimizeToTray
     {

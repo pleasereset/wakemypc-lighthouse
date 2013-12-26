@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Agent
+namespace ree7.WakeMyPC.Agent
 {
     /// <summary>
     /// Interaction logic for App.xaml

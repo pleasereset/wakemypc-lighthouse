@@ -8,8 +8,8 @@
     <ProjectGuid>{0286CB9F-58F3-4FD8-A541-564145C26E47}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Agent</RootNamespace>
-    <AssemblyName>Agent</AssemblyName>
+    <RootNamespace>ree7.WakeMyPC.Agent</RootNamespace>
+    <AssemblyName>WakeMyPC.Agent</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -37,7 +37,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Agent.App</StartupObject>
+    <StartupObject>ree7.WakeMyPC.Agent.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>ico.ico</ApplicationIcon>
@@ -82,8 +82,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Utils\BoolInverterConverter.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -109,9 +107,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ProbeServer\ProbeServer.csproj">
+    <ProjectReference Include="..\ProbeServer\LighthouseServer.csproj">
       <Project>{0AD2E73D-70B9-4BF4-9579-3897D3601596}</Project>
-      <Name>ProbeServer</Name>
+      <Name>LighthouseServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\WindowsService\WindowsService.csproj">
       <Project>{d9892382-9458-4436-9104-ecc2a8a6ad6d}</Project>

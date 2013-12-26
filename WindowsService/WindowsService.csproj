@@ -82,9 +82,9 @@
     <Content Include="ManualInstallation.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ProbeServer\ProbeServer.csproj">
+    <ProjectReference Include="..\ProbeServer\LighthouseServer.csproj">
       <Project>{0ad2e73d-70b9-4bf4-9579-3897d3601596}</Project>
-      <Name>ProbeServer</Name>
+      <Name>LighthouseServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

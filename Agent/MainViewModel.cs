@@ -6,7 +6,7 @@ using ree7.WakeMyPC.WindowsService;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 
-namespace Agent
+namespace ree7.WakeMyPC.Agent
 {
     public class MainViewModel : INotifyPropertyChanged
     {

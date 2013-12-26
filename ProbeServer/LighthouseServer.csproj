@@ -42,6 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\AccountCommands.cs" />
+    <Compile Include="Commands\CommandBase.cs" />
+    <Compile Include="Commands\PowerCommands.cs" />
+    <Compile Include="LighthouseProtocolCommands.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server.cs" />

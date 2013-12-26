@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace Agent
+namespace ree7.WakeMyPC.Agent
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

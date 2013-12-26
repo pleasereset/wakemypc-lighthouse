@@ -1,9 +1,10 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" x:Class="Agent.MainWindow"
+        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" x:Class="ree7.WakeMyPC.Agent.MainWindow"
         Title="Wake my PC Lighthouse" Height="317" Width="525" Icon="/Agent;component/ico.ico" ResizeMode="CanMinimize" 
-        Cursor="{Binding IsBusy, Converter={StaticResource BusyStateBoolCursorConverter}}" IsEnabled="{Binding IsBusy, Converter={StaticResource BoolInverterConverter}}">
+        Cursor="{Binding IsBusy, Converter={StaticResource BusyStateBoolCursorConverter}}" 
+	    IsEnabled="{Binding IsBusy, Converter={StaticResource BoolInverterConverter}}">
     <Window.Resources>
         <Style x:Key="ButtonFocusVisual">
             <Setter Property="Control.Template">
@@ -87,7 +88,10 @@
                 <StackPanel>
                     <TextBlock Text="Port" Margin="0,0,0,8"/>
                     <TextBox x:Name="tbPort" Text="{Binding Port, Mode=TwoWay}" Margin="0,0,0,8" KeyUp="SettingsBoxes_KeyUp"/>
-                    <TextBlock Text="Access password" Margin="0,0,0,8"/>
+					<TextBlock Margin="0,0,0,8">
+						<Run Text="Access password"/>
+						<Run Text="(do not use the '/' character)" FontStyle="Italic"/>
+					</TextBlock>
                     <TextBox x:Name="tbPassword" Text="{Binding Password, Mode=TwoWay}" Margin="0,0,0,8" KeyUp="SettingsBoxes_KeyUp"/>
                     <Button Click="SaveButton_Click" Content="Save" IsEnabled="{Binding CanSaveSettings}" Style="{DynamicResource SystemButtonStyle}" Width="100" Height="30" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,8"/>
                 </StackPanel>

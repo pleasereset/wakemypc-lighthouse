@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Data;
 
-namespace Agent.Utils.Converters
+namespace ree7.WakeMyPC.Agent.Utils.Converters
 {
     public class BoolInverterConverter : IValueConverter
     {

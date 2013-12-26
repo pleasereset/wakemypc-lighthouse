@@ -1,8 +1,8 @@
-﻿<Application x:Class="Agent.App"
+﻿<Application x:Class="ree7.WakeMyPC.Agent.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:a="clr-namespace:Agent"
-             xmlns:c="clr-namespace:Agent.Utils.Converters"
+             xmlns:a="clr-namespace:ree7.WakeMyPC.Agent"
+             xmlns:c="clr-namespace:ree7.WakeMyPC.Agent.Utils.Converters"
              StartupUri="MainWindow.xaml" 
              Startup="Application_Startup">
     <Application.Resources>

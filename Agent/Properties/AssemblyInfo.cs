@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ree7")]
 [assembly: AssemblyProduct("Wake my PC Lighthouse Agent")]
-[assembly: AssemblyCopyright("Copyright © Pierre Belin 2012")]
+[assembly: AssemblyCopyright("Copyright © Pierre Belin 2012-2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
