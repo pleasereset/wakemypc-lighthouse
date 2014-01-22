@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using ree7.WakeMyPC.ProbeServer;
+using ree7.WakeMyPC.LighthouseCore;
 using System.ServiceProcess;
-using ree7.WakeMyPC.WindowsService;
+using ree7.WakeMyPC.LighthouseService;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 
@@ -175,9 +175,6 @@ namespace ree7.WakeMyPC.Agent
             if(IsServerRunning == false) StartServer();
         }
 
-        /// <summary>
-        /// Please, tranform me into ICommand when you'll be less lasy
-        /// </summary>
         public void SettingsModified()
         {
             CanSaveSettings = true;

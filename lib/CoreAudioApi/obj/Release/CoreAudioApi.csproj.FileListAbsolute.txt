@@ -1,0 +1,5 @@
+D:\Users\Pierre\Dropbox\ree7\Wake my PC\lighthouse\src\lib\CoreAudioApi\bin\Release\CoreAudioApi.dll
+D:\Users\Pierre\Dropbox\ree7\Wake my PC\lighthouse\src\lib\CoreAudioApi\bin\Release\CoreAudioApi.pdb
+D:\Users\Pierre\Dropbox\ree7\Wake my PC\lighthouse\src\lib\CoreAudioApi\obj\Release\CoreAudioApi.csprojResolveAssemblyReference.cache
+D:\Users\Pierre\Dropbox\ree7\Wake my PC\lighthouse\src\lib\CoreAudioApi\obj\Release\CoreAudioApi.dll
+D:\Users\Pierre\Dropbox\ree7\Wake my PC\lighthouse\src\lib\CoreAudioApi\obj\Release\CoreAudioApi.pdb
