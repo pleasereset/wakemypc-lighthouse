@@ -1,7 +1,4 @@
-Agent/Bin
-Agent/obj
-Service/Bin
-Service/obj
-ProbeServer/Bin
-ProbeServer/obj
-*.suo
+Bin
+obj
+Thumbs.db
+.suo

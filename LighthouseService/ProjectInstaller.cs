@@ -17,11 +17,11 @@ namespace ree7.WakeMyPC.LighthouseService
 			serviceInstaller1.Description = WakeService.SvcDescription;
 		}
 
-		public static void Install(bool undo, string[] args)
+		public static bool Install(bool undo, string[] args)
 		{
 			try
 			{
-				Console.WriteLine(undo ? "uninstalling" : "installing");
+				Console.WriteLine(undo ? "Uninstalling..." : "Installing...");
 				using (AssemblyInstaller inst = new AssemblyInstaller(typeof(WakeService).Assembly, args))
 				{
 					IDictionary state = new Hashtable();
@@ -48,11 +48,15 @@ namespace ree7.WakeMyPC.LighthouseService
 						throw;
 					}
 				}
+
+				return true;
 			}
 			catch (Exception ex)
 			{
 				Console.Error.WriteLine(ex.Message);
 			}
+
+			return false;
 		}
 
 		private void serviceProcessInstaller1_AfterInstall(object sender, InstallEventArgs e)
