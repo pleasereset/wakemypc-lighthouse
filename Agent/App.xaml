@@ -1,12 +1,12 @@
 ﻿<Application x:Class="ree7.WakeMyPC.Agent.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:a="clr-namespace:ree7.WakeMyPC.Agent"
-             xmlns:c="clr-namespace:ree7.WakeMyPC.Agent.Utils.Converters"
-             StartupUri="MainWindow.xaml" 
-             Startup="Application_Startup">
-    <Application.Resources>
-        <c:BoolInverterConverter x:Key="BoolInverterConverter"/>
-        <a:BusyStateBoolCursorConverter x:Key="BusyStateBoolCursorConverter"/>
-    </Application.Resources>
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:c="clr-namespace:ree7.WakeMyPC.Agent.Utils.Converters" 
+			 StartupUri="MainWindow.xaml" Startup="Application_Startup" 
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 d1p1:Ignorable="d" xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006">
+  <Application.Resources>
+	<c:BoolInverterConverter x:Key="BoolInverterConverter"/>
+	<c:BusyStateBoolCursorConverter x:Key="BusyStateBoolCursorConverter"/>
+  </Application.Resources>
 </Application>

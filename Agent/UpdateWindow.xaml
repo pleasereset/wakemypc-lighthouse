@@ -1,0 +1,96 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="ree7.WakeMyPC.Agent.UpdateWindow"
+        Title="Check for updates" Height="250" Width="500" Icon="ico.ico" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
+	<Grid>
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup x:Name="LogicalStateGroup">
+				<VisualState x:Name="Loading">
+					<Storyboard>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="LoadingStateGrid">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="UpdateAvailable">
+					<Storyboard>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="LoadingStateGrid">
+							<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="UpdateAvailableStateGrid">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="NoUpdateAvailableStateGrid">
+							<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+						</ObjectAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="NoUpdateAvailable">
+					<Storyboard>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="LoadingStateGrid">
+							<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="UpdateAvailableStateGrid">
+							<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="NoUpdateAvailableStateGrid">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
+		<Grid x:Name="LoadingStateGrid" Margin="20" d:IsHidden="True">
+			<StackPanel>
+				<TextBlock Text="Checking for updates..." Margin="0,10"/>
+				<ProgressBar IsIndeterminate="True" Height="12"/>
+			</StackPanel>
+			<Button Content="Close" VerticalAlignment="Bottom" HorizontalAlignment="Right" Padding="20,5" Click="OnCloseClick"/>
+		</Grid>
+		<Grid x:Name="UpdateAvailableStateGrid" Margin="20" Visibility="Collapsed">
+			<Border Background="#FFDEFFCF" BorderThickness="1" BorderBrush="#FF2F9500" Padding="10">
+				<StackPanel>
+					<TextBlock Text="An update is available !" FontSize="18.667" Margin="0,0,0,4"/>
+					<TextBlock>
+						<Run Text="Your version : "/>
+						<Run Text="{Binding CurrentVersion}"/>
+					</TextBlock>
+					<TextBlock>
+						<Run Text="Latest version : "/>
+						<Run Text="{Binding NewVersion}" FontWeight="Bold"/>
+					</TextBlock>
+
+					<TextBlock Text="Get the update : " Margin="0,10"/>
+					<TextBlock Text="{Binding NewVersionUri}" TextWrapping="Wrap" TextDecorations="Underline" MouseLeftButtonUp="OnNewVersionHyperlinkClick">
+						<TextBlock.Foreground>
+							<SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+						</TextBlock.Foreground>
+					</TextBlock>
+				</StackPanel>
+			</Border>
+		</Grid>
+		<Grid x:Name="NoUpdateAvailableStateGrid" Margin="20" Visibility="Collapsed">
+			<StackPanel>
+				<TextBlock Text="Your software is up to date :-)" FontSize="18.667" Margin="0,0,0,4"/>
+				<TextBlock>
+					<Run Text="Your version : "/>
+					<Run Text="{Binding CurrentVersion}"/>
+				</TextBlock>
+			</StackPanel>
+			<Button Content="Close" VerticalAlignment="Bottom" HorizontalAlignment="Right" Padding="20,5" Click="OnCloseClick"/>
+		</Grid>
+	</Grid>
+</Window>

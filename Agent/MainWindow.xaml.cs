@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace ree7.WakeMyPC.Agent
@@ -71,25 +67,31 @@ namespace ree7.WakeMyPC.Agent
 			return String.Join("-", (from b in mac select b.ToString("x2"))).ToUpper();
 		}
 
-		private void StartButton_Click(object sender, RoutedEventArgs e)
-		{
-			MainViewModel.Instance.StartServer();
-		}
-
-		private void StopButton_Click(object sender, RoutedEventArgs e)
-		{
-			MainViewModel.Instance.StopServer();
-		}
-
-		private void SaveButton_Click(object sender, RoutedEventArgs e)
-		{
-			MainViewModel.Instance.SaveSettings();
-		}
-
 		private void SettingsBoxes_KeyUp(object sender, KeyEventArgs e)
 		{
+			tbPassword.Text = tbPassword.Text.Replace('/', '_');
 			MainViewModel.Instance.SettingsModified();
-		}       
+		}
+
+		#region Tray menu
+		private void TrayMenuOpen_Click(object sender, RoutedEventArgs e)
+		{
+			if (this.WindowState == WindowState.Minimized)
+				this.WindowState = WindowState.Normal;
+		}
+
+		private void TrayMenuExit_Click(object sender, RoutedEventArgs e)
+		{
+			Application.Current.Shutdown(0);
+		}
+		#endregion
+
+		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			// Close = minimize to tray
+			e.Cancel = true;
+			this.WindowState = WindowState.Minimized;
+		}
 	}
 
 	public class NetworkInterfaceItem
@@ -105,50 +107,6 @@ namespace ree7.WakeMyPC.Agent
 			{
 				return null;
 			}
-		}
-	}
-
-	public class IconExtractor
-	{
-
-		public static Icon Extract(string file, int number, bool largeIcon)
-		{
-			IntPtr large;
-			IntPtr small;
-			ExtractIconEx(file, number, out large, out small, 1);
-			try
-			{
-				return Icon.FromHandle(largeIcon ? large : small);
-			}
-			catch
-			{
-				return null;
-			}
-
-		}
-		[DllImport("Shell32.dll", EntryPoint = "ExtractIconExW", CharSet = CharSet.Unicode, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-		private static extern int ExtractIconEx(string sFile, int iIndex, out IntPtr piLargeVersion, out IntPtr piSmallVersion, int amountIcons);
-
-	}
-
-	public class BusyStateBoolCursorConverter : IValueConverter
-	{
-		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-		{
-			if (value is bool)
-			{
-				bool b = (bool)value;
-				return b ? Cursors.Wait : Cursors.Arrow;
-			}
-			else
-			{
-				throw new ArgumentException();
-			}
-		}
-
-		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }
