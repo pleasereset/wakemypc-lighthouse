@@ -8,13 +8,6 @@ using System.Windows.Controls;
 
 namespace ree7.WakeMyPC.Agent
 {
-	public class UpdateWindowData
-	{
-		public string CurrentVersion { get; set; }
-		public string NewVersion { get; set; }
-		public Uri NewVersionUri { get; set; }
-	}
-
 	public partial class UpdateWindow : Window
 	{
 		/// <summary>
@@ -30,58 +23,30 @@ namespace ree7.WakeMyPC.Agent
 
 		private void CheckForUpdates()
 		{
-			WebClient client = new WebClient();
-			client.DownloadStringCompleted += client_DownloadStringCompleted;
-			client.DownloadStringAsync(new Uri(LHUpdateDataUrl));
-		}
-
-		private void client_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
-		{
-			if(e.Error == null)
+			UpdateChecker checker = new UpdateChecker();
+			checker.Completed += (src, args) =>
 			{
-				try
+				if(args.Error == null)
 				{
-					JObject json = JObject.Parse(e.Result);
-					string latestVString = (string)json["win"]["version"];
-					string latestVUrl = (string)json["win"]["url"];
+					this.DataContext = args;
 
-					Version current = Assembly.GetExecutingAssembly().GetName().Version;
-					Version latest = Version.Parse(latestVString);
-
-					if(latest > current)
+					if(args.UpdateAvailable)
 					{
-						// An update is available
-						this.DataContext = new UpdateWindowData()
-						{
-							CurrentVersion = current.ToString(),
-							NewVersion = latest.ToString(),
-							NewVersionUri = new Uri(latestVUrl, UriKind.Absolute)
-						};
-
 						LoadingStateGrid.Visibility = Visibility.Collapsed;
 						UpdateAvailableStateGrid.Visibility = Visibility.Visible;
 					}
 					else
 					{
-						// The software is up-to date
-						this.DataContext = new UpdateWindowData()
-						{
-							CurrentVersion = current.ToString(),
-						};
-
 						LoadingStateGrid.Visibility = Visibility.Collapsed;
 						NoUpdateAvailableStateGrid.Visibility = Visibility.Visible;
 					}
 				}
-				catch(Exception ex)
+				else
 				{
-					OnException(ex);
+					OnException(args.Error);
 				}
-			}
-			else
-			{
-				OnException(e.Error);
-			}
+			};
+			checker.Start();
 		}
 
 		private void OnException(Exception e)

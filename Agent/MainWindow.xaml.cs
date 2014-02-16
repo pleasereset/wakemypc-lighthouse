@@ -19,18 +19,21 @@ namespace ree7.WakeMyPC.Agent
 
 		private void MainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
-			LoadMac();
+			Dispatcher.BeginInvoke(new Action(() =>
+			{
+				LoadMac();
 
-			try
-			{
-				DataContext = MainViewModel.Instance;
-			}
-			catch (Exception ex)
-			{
-				// Mayday, could not initalize the agent application, we're going down !
-				MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				Application.Current.Shutdown(-1);
-			}
+				try
+				{
+					DataContext = MainViewModel.Instance;
+				}
+				catch (Exception ex)
+				{
+					// Mayday, could not initalize the agent application, we're going down !
+					MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					Application.Current.Shutdown(-1);
+				}
+			}), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
 		}
 
 		private void LoadMac()
@@ -73,25 +76,12 @@ namespace ree7.WakeMyPC.Agent
 			MainViewModel.Instance.SettingsModified();
 		}
 
-		#region Tray menu
-		private void TrayMenuOpen_Click(object sender, RoutedEventArgs e)
-		{
-			if (this.WindowState == WindowState.Minimized)
-				this.WindowState = WindowState.Normal;
-		}
-
+		#region Menu
 		private void TrayMenuExit_Click(object sender, RoutedEventArgs e)
 		{
 			Application.Current.Shutdown(0);
 		}
 		#endregion
-
-		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			// Close = minimize to tray
-			e.Cancel = true;
-			this.WindowState = WindowState.Minimized;
-		}
 	}
 
 	public class NetworkInterfaceItem

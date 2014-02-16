@@ -4,8 +4,8 @@
 		xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" 
 		xmlns:tb="http://www.hardcodet.net/taskbar"
 		Title="Wake my PC Lighthouse" 
-		Height="400" Width="500" Icon="ico.ico" ResizeMode="NoResize" ShowInTaskbar="False" 
-		IsEnabled="{Binding IsBusy, Converter={StaticResource BoolInverterConverter}}" Closing="Window_Closing">
+		Height="380" Width="500" Icon="ico.ico" ResizeMode="NoResize"
+		IsEnabled="{Binding IsBusy, Converter={StaticResource BoolInverterConverter}}" WindowStartupLocation="CenterScreen">
 	<Window.Resources>
 
 	</Window.Resources>
@@ -47,20 +47,20 @@
 				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
 
-			<Border Grid.Row="2" Background="#FFFFFAC6" BorderBrush="#FFBD9200" Padding="6,10" BorderThickness="1" VerticalAlignment="Bottom">
+			<Border Grid.Row="2" Background="#FFFFFAC6" BorderBrush="#FFBD9200" Padding="6" BorderThickness="1" VerticalAlignment="Bottom">
 				<StackPanel>
-					<TextBlock Text="Available Ethernet MAC(s)" FontWeight="Bold" Margin="0,-5,0,5" Foreground="#FFBD9200"/>
-					<ListBox x:Name="MacList" Height="70" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="#FFBD9200">
+					<TextBlock Text="Don't forget to open the port (TCP) in your firewall's settings and on your router (if applicable)." TextWrapping="Wrap" Foreground="#FFBD9200"/>
+					<TextBlock Text="Ethernet MAC(s) on this PC :" FontWeight="Bold" Margin="0,10,0,0" Foreground="#FFBD9200"/>
+					<ListBox x:Name="MacList" Height="70" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="#FFBD9200" Margin="-6,0,-6,-10">
 						<ItemsControl.ItemTemplate>
 							<DataTemplate>
 								<StackPanel Orientation="Horizontal">
-									<TextBlock Text="{Binding MAC}" FontWeight="Bold"/>
+									<TextBlock Text="{Binding MAC}" FontWeight="Bold" Margin="0,0,5,0"/>
 									<TextBlock Text="{Binding Name}"/>
 								</StackPanel>
 							</DataTemplate>
 						</ItemsControl.ItemTemplate>
 					</ListBox>
-					<TextBlock Text="Don't forget to open the port (TCP) in your firewall's settings and on your router (if applicable)." TextWrapping="Wrap" Foreground="#FFBD9200"/>
 			</StackPanel>
 			</Border>
 
@@ -79,28 +79,27 @@
 						</StackPanel>
 						<StackPanel Grid.Column="2">
 							<TextBlock Margin="0,0,0,4">
-								<Run Text="Access password"/>
+								<Run Text="Password"/>
 								<Run Text="(do not use '/')" FontStyle="Italic"/>
 							</TextBlock>
 							<TextBox x:Name="tbPassword" Text="{Binding Password, Mode=TwoWay}" Margin="0,0,0,8" KeyUp="SettingsBoxes_KeyUp" TabIndex="2"/>
 						</StackPanel>
 					</Grid>
-					
-					
-					
-					
+
 					<Button Command="{Binding SaveSettings}" Content="Save settings" IsEnabled="{Binding CanSaveSettings}" Width="100" Height="25" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,8" TabIndex="3"/>
 				</StackPanel>
 			</Grid>
 			
 			
 			<StackPanel x:Name="DebugPanel" Orientation="Vertical" Grid.Row="1">
-				<TextBlock Text="I'm a beta tool (source available on Github). You can give feedback about me at www.ree7.fr" TextWrapping="Wrap" Foreground="#FFA39B9B" Margin="0,4,0,0" />				
+				<TextBlock TextWrapping="Wrap" Foreground="#FFA39B9B" Margin="0,4,0,0">
+					<Run Text="This tool is in beta version (source available on Github)."/><LineBreak/><Run Text="You can give feedback at : www.ree7.fr" />
+				</TextBlock>
 			</StackPanel>
 
 		</Grid>
 		
-		<tb:TaskbarIcon IconSource="ico.ico" >
+		<!--<tb:TaskbarIcon IconSource="ico.ico" >
 			<tb:TaskbarIcon.ContextMenu>
 				<ContextMenu>
 					<ContextMenu.Items>
@@ -110,6 +109,6 @@
 					</ContextMenu.Items>
 				</ContextMenu>
 			</tb:TaskbarIcon.ContextMenu>
-		</tb:TaskbarIcon>
+		</tb:TaskbarIcon>-->
 	</Grid>
 </Window>

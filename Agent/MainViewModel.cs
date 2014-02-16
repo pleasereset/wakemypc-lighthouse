@@ -6,11 +6,16 @@ using ree7.WakeMyPC.LighthouseService;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight;
+using System.Windows;
+using System.Diagnostics;
+using System.IO;
 
 namespace ree7.WakeMyPC.Agent
 {
 	public class MainViewModel : ObservableObject
 	{
+		private const string SvcFileName = "lighthouse.svc.exe";
+
 		#region Singleton
 
 		private MainViewModel()
@@ -165,11 +170,29 @@ namespace ree7.WakeMyPC.Agent
 
 		private void Initialize()
 		{
+			IsBusy = true;
+
 			_service = LocateService();
 			IsServerRunning = _service.Status == ServiceControllerStatus.Running;
 
 			LoadSettingsFromRegistry();
 			CanSaveSettings = false;
+
+			// Launch an update check
+			UpdateChecker uc = new UpdateChecker();
+			uc.Completed += (src, args) =>
+			{
+				if (args.Error == null && args.UpdateAvailable)
+				{
+					if (MessageBox.Show("A new version is available." + Environment.NewLine + "Click 'yes' to see more about the update.", "Update", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+					{
+						this.CheckForUpdates.Execute(null);
+					}
+				}
+			};
+			uc.Start();
+
+			IsBusy = false;
 		}
 
 		private ServiceController LocateService()
@@ -181,7 +204,27 @@ namespace ree7.WakeMyPC.Agent
 					return svc;
 			}
 
-			throw new WarningException("Wake my PC Lighthouse service is not installed.");
+			// Service was not found
+			if (MessageBox.Show("The background service is not installed on this system." + Environment.NewLine + "Would you like to install it ?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Exclamation)
+				== MessageBoxResult.Yes)
+			{
+				var currentDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+				var servicePath = Path.Combine(currentDirectory, SvcFileName);
+				if (System.IO.File.Exists(servicePath))
+				{
+					var p = Process.Start(servicePath, "-i");
+					p.WaitForExit();
+					return LocateService();
+				}
+				else
+				{
+					throw new WarningException("Cannot find " + SvcFileName + " in " + currentDirectory);
+				}
+			}
+			else
+			{
+				throw new WarningException("Cannot continue : Wake my PC Lighthouse service is not installed.");
+			}
 		}
 
 		
