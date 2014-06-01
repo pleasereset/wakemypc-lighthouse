@@ -21,6 +21,7 @@ namespace ree7.WakeMyPC.LighthouseCore
 		public const string ShutdownCommand = "SHUTDOWN";
 		public const string ResetCommand = "RESET";
 		public const string StandbyCommand = "STANDBY";
+		public const string HibernateCommand = "HIBERNATE";
 		public const string SessionLockCommand = "WIN_SESSION_LOCK";
 		public const string SessionCloseCommand = "WIN_SESSION_CLOSE";
 

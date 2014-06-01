@@ -33,6 +33,20 @@ namespace ree7.WakeMyPC.LighthouseCore.Commands
 		}
 	}
 
+	public class HibernateCommand : CommandBase
+	{
+		protected override string GetName()
+		{
+			return LighthouseProtocolCommands.HibernateCommand;
+		}
+
+		public override bool Execute(string receivedText)
+		{
+			Utils.System.Hibernate();
+			return true;
+		}
+	}
+
 	public class StandbyCommand : CommandBase
 	{
 		protected override string GetName()

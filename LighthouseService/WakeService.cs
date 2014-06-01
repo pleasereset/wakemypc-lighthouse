@@ -1,16 +1,24 @@
 ﻿using ree7.WakeMyPC.LighthouseCore;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Security.Principal;
 using System.ServiceProcess;
 
 namespace ree7.WakeMyPC.LighthouseService
 {
+	/// <summary>
+	/// Entry point of the service
+	/// </summary>
 	public partial class WakeService : ServiceBase
 	{
+		// Service description strings as seen in Windows control panel
 		public const string SvcName = "Wake my PC Lighthouse";
 		public const string SvcDescription = "Allows the phone application to know if the computer is running and to power it down.";
 
+		// Command line options
 		const string cliDebugShort = "-d";
 		const string cliDebugLong = "--debug";
 		const string cliHelpShort = "-?";
@@ -23,12 +31,14 @@ namespace ree7.WakeMyPC.LighthouseService
 		bool useLogs;
 		IConfiguration currentConfiguration;
 		Server currentServer;
-			
 		
 		public WakeService(bool useLogs)
 		{
 			InitializeComponent();
 			CanStop = true;
+
+			// Setup a global exception handler
+			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
 			// Redirect the core logs to the service's EventLog
 			ree7.WakeMyPC.LighthouseCore.Utils.Log.DefineMethod(LogOutlet);
@@ -53,8 +63,6 @@ namespace ree7.WakeMyPC.LighthouseService
 			{
 				foreach(string arg in args)
 				{
-					//Console.WriteLine("arg: " + arg);
-
 					switch(arg.ToLowerInvariant())
 					{
 						case cliHelpLong:
@@ -185,22 +193,15 @@ namespace ree7.WakeMyPC.LighthouseService
 
 		protected override void OnStart(string[] args)
 		{
-			currentConfiguration = new RegistryConfiguration(LogOutlet); //new StaticConfiguration(33666, "toto");
+			currentConfiguration = new RegistryConfiguration(LogOutlet);
 			StartServer();
+			//StartTests();
 		}
 
 		protected override void OnStop()
 		{
 			StopServer();
-		}
-
-		private void LogOutlet(string message)
-		{
-			if (useLogs)
-			{
-				Console.WriteLine(message);
-				if (this.EventLog != null) this.EventLog.WriteEntry(message);
-			}
+			LogFlushBufferToFile();
 		}
 
 		private void StartServer()
@@ -219,5 +220,93 @@ namespace ree7.WakeMyPC.LighthouseService
 			currentServer.Stop();
 			currentServer = null;
 		}
+
+		#region Logging and exception handling
+
+		private List<string> _logBuffer = new List<string>();
+		private const int _logMaxSize = 600 * 1024;
+
+		private void LogOutlet(string message)
+		{
+			if (useLogs)
+			{
+				Console.WriteLine(message);
+				if (this.EventLog != null) this.EventLog.WriteEntry(message);
+
+				lock (_logBuffer)
+				{
+					_logBuffer.Add(message);
+				}
+				if(_logBuffer.Count > 10)
+				{
+					LogFlushBufferToFile();
+				}
+			}
+		}
+
+		private void LogFlushBufferToFile()
+		{
+			string path = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
+			string logFilePath = Path.Combine(path, "service.log");
+			string logAlternativeFilePath = Path.Combine(path, "service.log.1");
+
+			// Rotate logs if necessary
+			if(File.Exists(logFilePath))
+			{
+				var fileInfo = new FileInfo(logFilePath);
+				if(fileInfo.Length >= _logMaxSize)
+				{
+					File.Copy(logFilePath, logAlternativeFilePath, true);
+					File.Delete(logFilePath);
+				}
+			}
+
+			var logFile = File.Open(logFilePath, FileMode.Append, FileAccess.Write);
+			lock (_logBuffer)
+			{
+				using (StreamWriter sw = new StreamWriter(logFile))
+				{
+					foreach (var logMessage in _logBuffer)
+					{
+						sw.WriteLine(logMessage);
+					}
+				}
+				_logBuffer.Clear();
+			}
+			logFile.Close();
+		}
+
+		private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			LogOutlet("[ERROR] UnhandledException : " + e.ExceptionObject.ToString());
+			LogFlushBufferToFile();
+		}
+
+		#endregion
+
+		#region Tests
+		[Conditional("DEBUG")]
+		private void StartTests()
+		{
+			TestLoggingSystem();	
+		}
+
+		private void TestLoggingSystem()
+		{
+			LogOutlet("Current assembly path : " + Assembly.GetCallingAssembly().Location);
+
+			int count = 0;
+			System.Threading.Timer timer = new System.Threading.Timer(o =>
+			{
+				LogOutlet("Hello world !");
+				count++;
+
+				if (count > 100)
+				{
+					throw new InvalidProgramException("Bim badaboum !!");
+				}
+			}, null, 1000, 333);
+		}
+		#endregion
 	}
 }

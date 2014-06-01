@@ -57,6 +57,15 @@ namespace ree7.WakeMyPC.LighthouseCore.Utils
 			}
 		}
 
+		public static void Hibernate()
+		{
+			try { SetSuspendState(true, true, true); }
+			catch (Exception e)
+			{
+				Log.d("Error in System.Hibernate : " + e.ToString());
+			}
+		}
+
 		public static void LogOff()
 		{
 			try { ExitWindowsEx(0, 0); }

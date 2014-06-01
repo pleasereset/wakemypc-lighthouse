@@ -2,6 +2,7 @@
 using ree7.WakeMyPC.LighthouseCore.Utils;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
@@ -57,6 +58,9 @@ namespace ree7.WakeMyPC.LighthouseCore
 			m_Worker = new Thread(() =>
 			{
 				TcpListener listener = new TcpListener(IPAddress.Any, m_Port);
+				listener.AllowNatTraversal(true);
+				listener.ExclusiveAddressUse = false;
+				listener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 
 				listener.Start();
 
@@ -76,7 +80,9 @@ namespace ree7.WakeMyPC.LighthouseCore
 						// Sends the HELLO message
 						Byte[] sendBytes = Encoding.UTF8.GetBytes(GetHello());
 						ns.Write(sendBytes, 0, sendBytes.Length);
+						ns.Flush();
 						Log.d("HELLO sent.");
+						
 
 						// Reads NetworkStream into a byte buffer.
 						byte[] bytes = new byte[client.ReceiveBufferSize];
@@ -99,17 +105,21 @@ namespace ree7.WakeMyPC.LighthouseCore
 							}
 							while(ns.DataAvailable);
 							
-							Log.d("Received : " + readString.ToString());
+							Log.d("Received : " + readString.ToString() + " - " + numberOfBytesRead.ToString() + " bytes");
+
+							
 						}
 						while (OnData(readString.ToString(), ns));
-						
-						ns.Close();
-						client.Close();
-						Log.d("Connection closed.");
 					}
 					catch (Exception e)
 					{
 						Log.d(e.ToString());
+					}
+					finally
+					{
+						ns.Close();
+						client.Close();
+						Log.d("Connection closed.");
 					}
 				}
 
@@ -134,6 +144,7 @@ namespace ree7.WakeMyPC.LighthouseCore
 			m_Commands.Add(new SessionCloseCommand());
 			m_Commands.Add(new SessionLockCommand());
 			m_Commands.Add(new ShutdownCommand());
+			m_Commands.Add(new HibernateCommand());
 			m_Commands.Add(new StandbyCommand());
 			m_Commands.Add(new ResetCommand());
 		}
@@ -156,6 +167,14 @@ namespace ree7.WakeMyPC.LighthouseCore
 
 		private bool OnData(string data, NetworkStream ns)
 		{
+			if(String.IsNullOrEmpty(data))
+			{
+				// http://msdn.microsoft.com/fr-fr/library/system.net.sockets.networkstream.read(v=vs.110).aspx
+				Log.d("The client has closed the socket, no answer needed.");
+				return false;
+			}
+
+
 			bool shouldContinue = true;
 			string answer = "KO UNKNOWN";
 			CommandBase action = null;
